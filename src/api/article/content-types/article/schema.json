@@ -4,7 +4,7 @@
   "info": {
     "singularName": "article",
     "pluralName": "articles",
-    "displayName": "Article",
+    "DisplayName": "Article",
     "description": "Articles and news content"
   },
   "options": {
@@ -20,8 +20,15 @@
       "type": "uid",
       "targetField": "title"
     },
+    "description": {
+      "type": "text",
+      "required": true
+    },
     "content": {
       "type": "richtext"
+    },
+    "readTime": {
+      "type": "string"
     },
     "embedUrl": {
       "type": "string"
@@ -35,7 +42,9 @@
       "required": true
     },
     "category": {
-      "type": "string"
+      "type": "enumeration",
+      "enum": ["Pergerakan Kurs", "Edukasi", "Analisis Pasar", "Tips & Tricks", "Regulasi"],
+      "required": true
     },
     "publishedDate": {
       "type": "date",
@@ -46,6 +55,9 @@
       "multiple": false,
       "required": false,
       "allowedTypes": ["images"]
+    },
+    "thumbnailUrl": {
+      "type": "string"
     },
     "isEmbed": {
       "type": "boolean",
