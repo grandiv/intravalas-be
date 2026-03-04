@@ -42,9 +42,14 @@ function loadEnv() {
   }
 }
 
-// Generate a Strapi-compatible document ID
+// Generate a Strapi-compatible document ID (26 character alphanumeric)
 function generateDocumentId() {
-  return crypto.randomUUID();
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < 26; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
 // Generate slug from title
