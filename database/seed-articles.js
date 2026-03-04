@@ -94,7 +94,8 @@ async function seedArticles() {
           `UPDATE articles SET
            title = $1, description = $2, content = $3, read_time = $4,
            source = $5, category = $6, published_date = $7, thumbnail_url = $8,
-           status = $9, updated_at = NOW(), updated_by_id = $10
+           status = $9, updated_at = NOW(), updated_by_id = $10,
+           created_by_id = COALESCE(created_by_id, $10)
            WHERE id = $11`,
           [
             article.title,
