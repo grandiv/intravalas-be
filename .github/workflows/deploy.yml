@@ -39,4 +39,4 @@ jobs:
       - name: Health Check
         run: |
           sleep 10
-          curl -f https://api.intravalas.izcy.tech/_health || exit 1
+          curl -f https://api-intravalas.izcy.tech/_health || exit 1
