@@ -122,11 +122,11 @@ async function seedArticles() {
         // Insert new article - need BOTH draft and published rows for Strapi v5
         const documentId = generateDocumentId();
 
-        // Insert draft version (published_at = NULL)
+        // Insert draft version (published_at = NULL, status = 'draft')
         await pool.query(
           `INSERT INTO articles
            (document_id, title, slug, description, content, read_time, source, category, published_date, thumbnail_url, status, created_at, updated_at, locale, published_at, created_by_id, updated_by_id)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW(), $12, NULL, $13, $13)`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'draft', NOW(), NOW(), $11, NULL, $12, $12)`,
           [
             documentId,
             article.title,
@@ -138,17 +138,16 @@ async function seedArticles() {
             article.category,
             article.publishedDate,
             article.thumbnailUrl || null,
-            article.status || 'published',
             null, // locale = NULL for draft
             adminId
           ]
         );
 
-        // Insert published version (published_at = NOW())
+        // Insert published version (published_at = NOW(), status = 'published')
         await pool.query(
           `INSERT INTO articles
            (document_id, title, slug, description, content, read_time, source, category, published_date, thumbnail_url, status, created_at, updated_at, locale, published_at, created_by_id, updated_by_id)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW(), 'en', NOW(), $12, $12)`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'published', NOW(), NOW(), 'en', NOW(), $11, $11)`,
           [
             documentId,
             article.title,
@@ -160,7 +159,6 @@ async function seedArticles() {
             article.category,
             article.publishedDate,
             article.thumbnailUrl || null,
-            article.status || 'published',
             adminId
           ]
         );
