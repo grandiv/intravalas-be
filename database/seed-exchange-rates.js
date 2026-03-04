@@ -9,6 +9,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { Pool } = require('pg');
 
 // Load seed data
@@ -41,6 +42,12 @@ function loadEnv() {
   }
 }
 
+// Generate a Strapi-compatible document ID (similar to Strapi's format)
+function generateDocumentId() {
+  // Strapi uses a specific format for document IDs
+  return crypto.randomUUID();
+}
+
 async function seedExchangeRates() {
   loadEnv();
 
@@ -63,14 +70,16 @@ async function seedExchangeRates() {
     );
     console.log(`Deleted ${deleteResult.rowCount} existing rates for ${effectiveDate}`);
 
-    // Insert new data (snake_case column names)
+    // Insert new data (snake_case column names) with document_id
     let inserted = 0;
     for (const rate of seedData) {
+      const documentId = generateDocumentId();
       await pool.query(
         `INSERT INTO exchange_rates
-         (currency_name, currency_code, country_code, nominal, we_buy, we_sell, effective_date, notes, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
+         (document_id, currency_name, currency_code, country_code, nominal, we_buy, we_sell, effective_date, notes, created_at, updated_at, locale)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW(), 'en')`,
         [
+          documentId,
           rate.currencyName,
           rate.currencyCode,
           rate.countryCode || null,
