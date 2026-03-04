@@ -3,14 +3,22 @@
  * Run with: node database/seed-exchange-rates.js
  */
 
-const exchangeRatesData = require('./seed-data.json');
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+// Load seed data
+const seedData = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'seed-data.json'), 'utf8')
+);
 
 async function seedExchangeRates() {
-  // Get Strapi instance
-  const { createStrapi } = await import('@strapi/strapi');
+  // Get Strapi - use require for CommonJS
+  const { createStrapi } = require('@strapi/strapi');
 
   // Bootstrap Strapi
-  const strapi = await createStrapi();
+  const strapi = createStrapi();
   await strapi.load();
 
   try {
@@ -18,19 +26,19 @@ async function seedExchangeRates() {
 
     // Clear existing data for the same effective date
     const existingRates = await strapi.db.query('api::exchange-rate.exchange-rate').findMany({
-      where: { effectiveDate: exchangeRatesData[0].effectiveDate }
+      where: { effectiveDate: seedData[0].effectiveDate }
     });
 
     if (existingRates.length > 0) {
-      console.log(`Deleting ${existingRates.length} existing rates for ${exchangeRatesData[0].effectiveDate}...`);
+      console.log(`Deleting ${existingRates.length} existing rates for ${seedData[0].effectiveDate}...`);
       await strapi.db.query('api::exchange-rate.exchange-rate').deleteMany({
-        where: { effectiveDate: exchangeRatesData[0].effectiveDate }
+        where: { effectiveDate: seedData[0].effectiveDate }
       });
     }
 
     // Insert new data
     let inserted = 0;
-    for (const rate of exchangeRatesData) {
+    for (const rate of seedData) {
       await strapi.db.query('api::exchange-rate.exchange-rate').create({
         data: rate
       });
