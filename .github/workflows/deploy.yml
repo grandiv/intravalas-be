@@ -38,5 +38,14 @@ jobs:
 
       - name: Health Check
         run: |
-          sleep 10
-          curl -f https://api-intravalas.izcy.tech/_health || exit 1
+          sleep 30
+          for i in 1 2 3; do
+            if curl -f https://api-intravalas.izcy.tech/_health; then
+              echo "Health check passed"
+              exit 0
+            fi
+            echo "Attempt $i failed, waiting 10s..."
+            sleep 10
+          done
+          echo "Health check failed after 3 attempts"
+          exit 1
