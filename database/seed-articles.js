@@ -119,8 +119,32 @@ async function seedArticles() {
         updated++;
         console.log(`  Updated: ${article.title.substring(0, 50)}...`);
       } else {
-        // Insert new article
+        // Insert new article - need BOTH draft and published rows for Strapi v5
         const documentId = generateDocumentId();
+
+        // Insert draft version (published_at = NULL)
+        await pool.query(
+          `INSERT INTO articles
+           (document_id, title, slug, description, content, read_time, source, category, published_date, thumbnail_url, status, created_at, updated_at, locale, published_at, created_by_id, updated_by_id)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW(), $12, NULL, $13, $13)`,
+          [
+            documentId,
+            article.title,
+            slug,
+            article.description,
+            article.content || article.description,
+            article.readTime || null,
+            article.source,
+            article.category,
+            article.publishedDate,
+            article.thumbnailUrl || null,
+            article.status || 'published',
+            null, // locale = NULL for draft
+            adminId
+          ]
+        );
+
+        // Insert published version (published_at = NOW())
         await pool.query(
           `INSERT INTO articles
            (document_id, title, slug, description, content, read_time, source, category, published_date, thumbnail_url, status, created_at, updated_at, locale, published_at, created_by_id, updated_by_id)
