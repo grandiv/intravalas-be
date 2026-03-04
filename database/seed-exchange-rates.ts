@@ -5,10 +5,11 @@
 
 import { exchangeRatesData } from './seed-data';
 
-// Use CommonJS compatible approach for Strapi
-const { default: strapi } = await import('@strapi/strapi');
-
 async function seedExchangeRates() {
+  // Dynamic import for Strapi
+  const strapiModule = await import('@strapi/strapi');
+  const strapi = strapiModule.default;
+
   // Bootstrap Strapi
   const appContext = await strapi().load();
 
@@ -45,4 +46,8 @@ async function seedExchangeRates() {
   }
 }
 
-seedExchangeRates();
+// Run the seed function
+seedExchangeRates().catch((err) => {
+  console.error('Seed failed:', err);
+  process.exit(1);
+});
