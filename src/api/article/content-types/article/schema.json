@@ -42,8 +42,7 @@
       "required": true
     },
     "category": {
-      "type": "enumeration",
-      "enum": ["Pergerakan Kurs", "Edukasi", "Analisis Pasar", "Tips & Tricks", "Regulasi"],
+      "type": "string",
       "required": true
     },
     "publishedDate": {
