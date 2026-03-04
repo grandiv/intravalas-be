@@ -13,7 +13,7 @@
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
-    "seed:rates": "tsx database/seed-exchange-rates.ts"
+    "seed:rates": "node database/seed-exchange-rates.js"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.1",
