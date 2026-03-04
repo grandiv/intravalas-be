@@ -56,19 +56,19 @@ async function seedExchangeRates() {
     console.log('Starting exchange rates seed...');
     const effectiveDate = seedData[0].effectiveDate;
 
-    // Clear existing data for the same effective date
+    // Clear existing data for the same effective date (snake_case column names)
     const deleteResult = await pool.query(
-      'DELETE FROM exchange_rates WHERE "effectiveDate" = $1',
+      'DELETE FROM exchange_rates WHERE effective_date = $1',
       [effectiveDate]
     );
     console.log(`Deleted ${deleteResult.rowCount} existing rates for ${effectiveDate}`);
 
-    // Insert new data
+    // Insert new data (snake_case column names)
     let inserted = 0;
     for (const rate of seedData) {
       await pool.query(
         `INSERT INTO exchange_rates
-         ("currencyName", "currencyCode", "countryCode", "nominal", "weBuy", "weSell", "effectiveDate", "notes", "createdAt", "updatedAt")
+         (currency_name, currency_code, country_code, nominal, we_buy, we_sell, effective_date, notes, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())`,
         [
           rate.currencyName,
