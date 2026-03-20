@@ -34,10 +34,14 @@ function loadEnv() {
 
     const [key, ...valueParts] = trimmed.split('=');
     if (key && valueParts.length > 0) {
+      const trimmedKey = key.trim();
       let value = valueParts.join('=');
       // Remove quotes
       value = value.replace(/^["']|["']$/g, '');
-      process.env[key.trim()] = value;
+      // Don't overwrite env vars already set (e.g. by Railway)
+      if (!process.env[trimmedKey]) {
+        process.env[trimmedKey] = value;
+      }
     }
   }
 }
