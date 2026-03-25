@@ -40,6 +40,10 @@
     },
     "notes": {
       "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 999
     }
   }
 }
